@@ -1,4 +1,3 @@
-/* Global Styles */
 :root {
   --primary-color: #EB5B00; /* Orange */
   --secondary-color: #A0C878; /* Green */
@@ -346,7 +345,7 @@ body.menu-open::before {
 }
 
 .hero-image img {
-  max-width: 100%;
+  max-width: 70%;
   height: auto;
   border-style: solid;
   border-radius: 1000px;
@@ -709,6 +708,7 @@ footer p {
   }
 
   .hero-image img {
+    padding-top: 25px;
     max-width: 40%;
   }
 }
