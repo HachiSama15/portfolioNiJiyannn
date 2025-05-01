@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet">
+    <style>
+        body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #104f51, #167d31);
+    margin: 0;
+}
+.calculator {
+    background: rgb(0, 0, 0);
+    border-radius: 25px;
+    border-style: inset;
+    border-color: rgb(198, 44, 44);
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 20px 40px rgba(5, 11, 60, 0.735);
+    overflow: hidden;
+}
+.display {
+    color: white;
+    font-size: 44px;
+    text-align: right;
+    padding: 20px 10px;
+    margin-bottom: 25px;
+    font-weight: 300;
+    height: 100px;
+    overflow: hidden;
+    white-space: pre-line;
+    line-height: 1.4;
+    transition: all 0.3s;
+}
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+button {
+    border: none;
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+button:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+.gray {
+    background: #ff003ca4;
+    color: black;
+}
+.dark {
+    background: #333333;
+    color: white;
+}
+.orange {
+    background: #0a4bff;
+    color: white;
+}
+.zero {
+    grid-column: span 2;
+    width: auto;
+    border-radius: 32px;
+    text-align: left;
+    padding-left: 26px;
+}
+
+.home .hme-btn {
+  position: relative;
+  display: inline;
+
+}
+    </style>
+
+    <title>GAWA NI GIAN</title>
+</head>
+
+<body>
+    <div class="calculator">
+        <div class="display" id="display">@io_jiyannn</div>
+        <div class="buttons">
+            <button class="gray" onclick="clearDisplay()">AC</button>
+            <button class="gray" onclick="toggleSign()">+/-</button>
+            <button class="gray" onclick="appendToDisplay('%')">%</button>
+            <button class="orange" onclick="appendToDisplay('/')">÷</button>
+            <button class="dark" onclick="appendToDisplay('7')">7</button>
+            <button class="dark" onclick="appendToDisplay('8')">8</button>
+            <button class="dark" onclick="appendToDisplay('9')">9</button>
+            <button class="orange" onclick="appendToDisplay('*')">×</button>
+            <button class="dark" onclick="appendToDisplay('4')">4</button>
+            <button class="dark" onclick="appendToDisplay('5')">5</button>
+            <button class="dark" onclick="appendToDisplay('6')">6</button>
+            <button class="orange" onclick="appendToDisplay('-')">−</button>
+            <button class="dark" onclick="appendToDisplay('1')">1</button>
+            <button class="dark" onclick="appendToDisplay('2')">2</button>
+            <button class="dark" onclick="appendToDisplay('3')">3</button>
+            <button class="orange" onclick="appendToDisplay('+')">+</button>
+            <button class="dark zero" onclick="appendToDisplay('0')">0</button>
+            <button class="dark" onclick="appendToDisplay('.')">.</button>
+            <button class="orange" onclick="calculate()">=</button>
+        </div>
+    </div>
+    <script>
+const display = document.getElementById('display');
+        let currentInput = '0';
+        let lyricInterval;
+        let currentLyricIndex = 0;
+        let startTime;
+        let isLyricMode = false;
+
+        const lyrics = [
+            { text: "When the light disappears", time: 0, duration: 6.24 },
+            { text: "And when this world's insincere", time: 6.24, duration: 5.30 },
+            { text: "You'll be safe here :>>", time: 11.64, duration: 4.31 },
+            { text: "When nobody hears you scream", time: 16.05, duration: 5.50 },
+            { text: "I'll scream with you", time: 21.75, duration: 2.57 },
+            { text: "You'll be safe", time: 24.32, duration: 2.27},
+            { text: "....", time: 26.59, duration: 2.46},
+            { text: "Ohh...ohhhh", time: 29.15, duration: 2.0 },
+            { text: "...", time: 30.85, duration: 2.35 },
+            { text: "Ahh...uhh", time: 33.2, duration: 2.5 },
+            { text: "...", time: 35.7, duration: 4.56 },
+            
+            { text: "Save your eyes", time: 41.25, duration: 2.98 },
+            { text: "From your tears", time: 44.23, duration: 3.22},
+            { text: "When everything's unclear", time: 47.25, duration: 5.51 },
+            { text: "You'll be safe here", time: 52.96, duration: 4.93},
+            
+            { text: "From the sheer weight", time: 56.97, duration: 3.05 },
+            { text: "Of your doubts and fears", time: 60.02, duration: 4.17},
+            { text: "Wounded heart", time: 63.29, duration: 2.50 },
+            { text: "When the light disappears", time: 66.89, duration: 6.14 },
+            { text: "And when this world's insincere", time: 73.73, duration: 5.20 },
+            { text: "You'll be safe here", time: 78.13, duration: 4.21 },//
+            
+            { text: "When nobody hears you scream", time: 82.34, duration: 5.50 },
+            { text: "I'll scream with you", time: 89.04, duration: 2.47},
+            { text: "You'll be safe here", time: 91.71, duration: 4.60},
+            
+            { text: "In my arms", time: 95.11, duration: 3.09},
+            { text: "Through the long cold night", time: 98.09, duration: 3.61},
+            { text: "Sleep tight", time: 101.5, duration: 2.90 },////
+            { text: "You'll be safe here", time: 103.95, duration: 4.40 },
+            
+            { text: "When no one understands", time: 108.35, duration: 6.10 },
+            { text: "I'll believe", time: 113.85, duration: 3.35 },//
+            { text: "You'll be safe", time: 117.55, duration: 4.20 },
+            { text: "You'll be safe", time: 120.75, duration: 3.20 },
+            { text: "You'll be safe here", time: 124.95, duration: 3.28 },//
+            { text: "Ohhh...ohh", time: 128.13, duration: 5.69},
+            { text: "Put your heart in my hands", time: 133.82, duration: 5.65 },
+            { text: "You'll be safe here", time: 139.47, duration: 10 },
+            { text: "@io_jiyannn", time: 145, duration: 100 }
+        ];
+
+        function appendToDisplay(value) {
+            if (isLyricMode) return;
+            if (currentInput === '0' && value !== '.') {
+                currentInput = value;
+            } else {
+                currentInput += value;
+            }
+            display.textContent = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '0';
+            display.textContent = currentInput;
+            stopLyrics();
+            isLyricMode = false;
+            display.style.fontSize = '48px';
+            display.style.textAlign = 'right';
+        }
+
+        function toggleSign() {
+            if (isLyricMode) return;
+            if (currentInput !== '0') {
+                currentInput = currentInput.startsWith('-') ? 
+                    currentInput.substring(1) : '-' + currentInput;
+                display.textContent = currentInput;
+            }
+        }
+
+        function calculate() {
+            if (isLyricMode) return;
+            try {
+                const result = eval(currentInput);
+                display.textContent = result;
+                currentInput = result.toString();
+                startLyrics();
+            } catch (error) {
+                display.textContent = 'Error';
+                currentInput = '0';
+            }
+        }
+
+        function startLyrics() {
+            stopLyrics();
+            currentLyricIndex = 0;
+            startTime = Date.now();
+            isLyricMode = true;
+            display.style.fontSize = '35px';
+            display.style.textAlign = 'justify';
+            updateLyric();
+        }
+
+        function updateLyric() {
+            const elapsedTime = (Date.now() - startTime) / 1000;
+            const currentLyric = lyrics[currentLyricIndex];
+
+            if (currentLyric && elapsedTime >= currentLyric.time) {
+                display.textContent = currentLyric.text;
+                currentLyricIndex++;
+            }
+
+            if (currentLyricIndex < lyrics.length) {
+                lyricInterval = setTimeout(updateLyric, 50);
+            } else {
+                isLyricMode = false;
+                setTimeout(() => {
+                    display.style.textAlign = 'right';
+                    display.style.fontSize = '48px';
+                    display.textContent = currentInput;
+                }, 3000);
+            }
+        }
+
+        function stopLyrics() {
+            if (lyricInterval) {
+                clearTimeout(lyricInterval);
+            }
+        }
+    </script>    
+</body>
+</html>
